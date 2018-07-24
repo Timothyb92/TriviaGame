@@ -11,14 +11,18 @@ $.getJSON("https://opentdb.com/api.php?amount=10&category=29&type=multiple", fun
     // console.log(data);
     console.log(data.results);
     console.log(data.results[0].question)
-
+    
     $(".question").text(data.results[0].question);
 })
 
-window.onload = function(){
-    // $("#triviaContainer").hide();
-}
+$(document).ready(function(){
+$("#triviaContainer").hide();
+
 
 $("#startGameContainer").click(function(){
-    alert("Start game clicked");
-})
+    console.log("Click worked");
+    $("#startGameContainer").hide();
+    $("#triviaContainer").show();
+  })
+
+});
