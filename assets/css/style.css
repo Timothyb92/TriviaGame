@@ -2,3 +2,14 @@ div {
     border: red solid 1px;
     margin: 25px 0px;
 }
+
+#startGameContainer {
+    height: 400px;
+    margin-top: 100px;
+    position: relative;
+}
+
+p {
+    position: absolute;
+    top: 50%
+}
