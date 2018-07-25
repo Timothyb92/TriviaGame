@@ -3,34 +3,44 @@ var correctAnswers = 0;
 var incorrectAnswers = 0;
 var unanswered = 0;
 var questionCount = 0;
-var time = 30;
-var buttonArr = [];
-var buttonNum;
-var randomNum = function(){
-    buttonNum = Math.floor(Math.random() * 4);
-}
+var time = 5;
 var answerIsCorrect;
-
-//Function that counts time down to zero
-var countDown = function(){
-    console.log(time);
-    $("#timer").text(time);
-    time--;
-}
-//Function that stops the countdown timer
-var stopTimer = function(){
-    clearInterval(myTimer);
-}
-
-//Function that calls countDown() and runs it every second
+var timeout;
 var myTimer;
+var stopTimer;
+
+
+
 
 
 //API call
 $.getJSON("https://opentdb.com/api.php?amount=10&category=29&type=multiple", function(data){
     
     var renderQuestion = function(){
+        var buttonNum;
+        var randomNum = function(){
+            buttonNum = Math.floor(Math.random() * 4);
+        }
+        var buttonArr = [];
         
+        //Function that counts time down to zero
+        var countDown = function(){
+            console.log(time);
+            $("#timer").text(time);
+            time--;
+            if (time === 0){
+                timeout = true;
+                revealAnswer();
+            }
+        }
+
+        $("#triviaContainer").show();
+        $("#answer").hide();
+        //Function that stops the countdown timer
+        stopTimer = function(){
+            clearInterval(myTimer);
+        };
+
         //starts count down timer for the question
         myTimer = setInterval(function(){
             if (questionCount < 10 && time >= 0){
@@ -94,36 +104,45 @@ $.getJSON("https://opentdb.com/api.php?amount=10&category=29&type=multiple", fun
     var revealAnswer = function(){
         stopTimer();
         //Set time out goes here
+        //Hides the trivia questions
         $("#triviaContainer").hide();
-        if (answerIsCorrect){
-            $("#result").html("<h3>Correct!</h3>")
-            $("#answerImg").html("<img src='assets/images/deadpoolThumbsUp.jpg'>")
-        } else if (!answerIsCorrect){
-            $("#result").html("<h3>Nope!</h3>")
+        //If the answer the user clicked is correct, it tell them so and Deadpool gives them a thumbs up
+        if (answerIsCorrect === true){
+            $("#result").html("<h3>Correct!</h3>");
+            $("#answerImg").html("<img src='assets/images/deadpoolThumbsUp.jpg'>");
+
+            //If the answer the user click is wrong, it tell them so and shows the correct answer. Deadpool gives them a thumbs down
+        } else if (answerIsCorrect === false){
+            $("#result").html("<h3>Nope!</h3>");
             $("#correctAnswer").text("The correct answer is " + data.results[questionCount].correct_answer);
-            $("#answerImg").html("<img src='assets/images/deadpoolThumbsDown.gif'>")
-        } else {
-            $("#result").text("Times up!")
+            $("#answerImg").html("<img src='assets/images/deadpoolThumbsDown.gif'>");
+
+            //If the user doesn't pick an answer in time, Deadpool gives them a thumbs down and show them the correct answer.
+        } else if (timeout === true){
+            $("#result").html("<h3>Times up!</h3>");
             $("#correctAnswer").text("The correct answer is " + data.results[questionCount].correct_answer);
-            $("#answerImg").html("<img src='assets/images/deadpoolThumbsDown.gif'>")
+            $("#answerImg").html("<img src='assets/images/deadpoolThumbsDown.gif'>");
         }
+        //Shows the answer screen and increased the question count
         $("#answer").show();
         questionCount++;
         gameOverCheck();
+        // setTimeout(renderQuestion(), 5000);
     };
+
+    //Checks to see if the game is over. If it's over, the final score screen will be shown.
+    var gameOverCheck = function(){
+        if (questionCount === 10){
+            $("#correctAnswersDiv").text("Correct answers: " + correctAnswers);
+            $("#incorrectAnswersDiv").text("Incorrect answers: " + incorrectAnswers);
+            $("#unansweredDiv").text("Unanswered questions: " + unanswered);
+            $("#triviaContainer").hide();
+            $("#finalScoreContainer").show();
+            stopTimer;
+        }
+    }
 })
 
-//Checks to see if the game is over. If it's over, the final score screen will be shown.
-var gameOverCheck = function(){
-    if (questionCount === 10){
-        $("#correctAnswersDiv").text("Correct answers: " + correctAnswers);
-        $("#incorrectAnswersDiv").text("Incorrect answers: " + incorrectAnswers);
-        $("#unansweredDiv").text("Correct answers: " + unanswered);
-        $("#triviaContainer").hide();
-        $("#finalScoreContainer").show();
-        stopTimer();
-    }
-}
 
 //Hides the questions,score and answer screen on load
 $(document).ready(function(){
