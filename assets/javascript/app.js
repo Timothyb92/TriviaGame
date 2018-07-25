@@ -10,25 +10,31 @@ var randomNum = function(){
     buttonNum = Math.floor(Math.random() * 4);
 }
 
-
+//Function that counts time down to zero
 var countDown = function(){
     console.log(time);
     $("#timer").text(time);
     time--;
 }
-
+//Function that stops the countdown timer
 var stopTimer = function(){
     clearInterval(myTimer);
+    time = 30;
 }
 
-var myTimer = setInterval(countDown, 1000)
+//Function that calls countDown() and runs it every second
+var myTimer = setInterval(function(){
+    if (time >= 0){
+        countDown();
+    }
+}, 1000)
 
 
 //API call
 $.getJSON("https://opentdb.com/api.php?amount=10&category=29&type=multiple", function(data){    
     //Function that assigns each possible answer to a random button for each question
     var renderQuestion = function(){
-        myTimer;
+        //Puts the question at the current index in the Div displayed to the user
         $(".question").text(data.results[questionCount].question);
         data.results[questionCount].incorrect_answers.forEach(function(value, index){
             while (buttonArr.length <= (index + 1)){
@@ -100,6 +106,7 @@ var gameOverCheck = function(){
 $(document).ready(function(){
     $("#triviaContainer").hide();
     $("#finalScoreContainer").hide();
+    $("#showAnswer").hide();
     
     $("#playAgain").click(function(){
         console.log("Play again clicked")
@@ -110,22 +117,6 @@ $(document).ready(function(){
         time = 30;
         $("#triviaContainer").show();
         $("#finalScoreContainer").hide();
-        myTimer;
     })
 
 });
-//Fucntion that makes the timer count down on each questions and increases the question count when the timer hits zero.
-// var countDown = function(){
-//     time = 30;
-//     setInterval(function(){
-//         if (time > 0){
-//         console.log(time);
-//         $("#timer").text(time);
-//         time--;
-//         }
-//         else if (time === 0) {
-//             questionCount++;
-//             clearInterval();
-//         }
-//     }, 1000);
-// }
