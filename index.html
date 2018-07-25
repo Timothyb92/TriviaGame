@@ -9,10 +9,20 @@
     <script src="assets/javascript/app.js"></script>
 </head>
 <body>
+    <!-- START GAME BUTTON THAT IS SHOWN ON LOAD -->
     <div class="container text-center" id="startGameContainer">
         <p class="col-md-12">Start Game</p>
     </div>
+
+    <!-- CONTAINER THAT HOLDS QUESTIONS AND MULTIPLE CHOICE ANSWERS -->
+    <!-- HIDDEN UNTIL USER CLICKS START GAME -->
+    <!-- HIDES AGAIN AT THE FINAL SCORE SCREEN -->
     <div class="container" id="triviaContainer">
+        <div class="row">
+            <div class="col-md-12 text-center" id="timeLeft">
+                Time left: <span id="timer">30</span>
+            </div>
+        </div>
         <div class="row">
             <div class="col-md-12 question text-center">Question goes here</div>
         </div>
@@ -25,6 +35,16 @@
             <button class="btn col-md-6" id="button3"><div class="answerButton text-center"></div></button>
         </div>
     </div>
+
+    <!-- SCREEN THAT SHOWS IF THE USER GOT EACH ANSWER CORRECT OR INCORRECT AS THEY CLICK THEIR ANSWER -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12"></div>
+        </div>
+    </div>
+
+    <!-- FINAL SCORE SCREEN. HIDDEN UNTIL ALL QUESTIONS ARE ANSWERED -->
+    <!-- IF THE USER CLICKS PLAY AGAIN, THIS SCREEN IS HIDDEN AND THE TRIVIA SCREEN IS SHOWN AGAIN -->
     <div class="container" id="finalScoreContainer">
         <div class="row">
             <div class="col-md-12 text-center">

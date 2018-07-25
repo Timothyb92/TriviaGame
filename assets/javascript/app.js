@@ -3,6 +3,7 @@ var correctAnswers = 0;
 var incorrectAnswers = 0;
 var unanswered = 0;
 var questionCount = 0;
+var time = 30;
 var buttonArr = [];
 var buttonNum;
 var randomNum = function(){
@@ -10,17 +11,24 @@ var randomNum = function(){
 }
 
 
+var countDown = function(){
+    console.log(time);
+    $("#timer").text(time);
+    time--;
+}
+
+var stopTimer = function(){
+    clearInterval(myTimer);
+}
+
+var myTimer = setInterval(countDown, 1000)
+
+
 //API call
-$.getJSON("https://opentdb.com/api.php?amount=10&category=29&type=multiple", function(data){
-    // console.log(data);
-    // console.log(data.results);
-    // console.log(data.results[0].question)
-    // console.log(data.results[0].incorrect_answers[0]);
-    
-    
-    
+$.getJSON("https://opentdb.com/api.php?amount=10&category=29&type=multiple", function(data){    
     //Function that assigns each possible answer to a random button for each question
     var renderQuestion = function(){
+        myTimer;
         $(".question").text(data.results[questionCount].question);
         data.results[questionCount].incorrect_answers.forEach(function(value, index){
             while (buttonArr.length <= (index + 1)){
@@ -32,7 +40,6 @@ $.getJSON("https://opentdb.com/api.php?amount=10&category=29&type=multiple", fun
             }
             $("#button" + buttonNum).text(value);
             $("#button" + buttonNum).attr("value", "incorrect");
-            // console.log(buttonArr);
         });
         //Puts the correct answer in the one remaining empty button
         while (buttonArr.indexOf(buttonNum) > 0){
@@ -51,20 +58,27 @@ $.getJSON("https://opentdb.com/api.php?amount=10&category=29&type=multiple", fun
         renderQuestion();
     })
 
+    //Event listener for clicks on the answer buttons
     $("button").click(function(){
+        //If the button is the correct answer, the correct answer count is increased, question count is increased, and the next question is rendered
         if ($(this).attr("value") == "correct"){
             console.log("clicked correct button");
+            time = 30;
             correctAnswers++;
             questionCount++;
             gameOverCheck();
             renderQuestion();
+            stopTimer();
         }
+        //If the button clicked is the incorrect answer, incorrect answer counter is increased, question count is increased, and the next question is rendered
         else if ($(this).attr("value") == "incorrect"){
             console.log("clicked incorrect button");
+            time = 30;
             incorrectAnswers++;
             questionCount++;
             gameOverCheck();
             renderQuestion();
+            stopTimer();
         }
     })
 })
@@ -77,6 +91,7 @@ var gameOverCheck = function(){
         $("#unansweredDiv").text("Correct answers: " + unanswered);
         $("#triviaContainer").hide();
         $("#finalScoreContainer").show();
+        stopTimer();
     }
 }
 
@@ -92,8 +107,25 @@ $(document).ready(function(){
         correctAnswers = 0;
         incorrectAnswers = 0;
         unanswered = 0;
+        time = 30;
         $("#triviaContainer").show();
         $("#finalScoreContainer").hide();
+        myTimer;
     })
 
 });
+//Fucntion that makes the timer count down on each questions and increases the question count when the timer hits zero.
+// var countDown = function(){
+//     time = 30;
+//     setInterval(function(){
+//         if (time > 0){
+//         console.log(time);
+//         $("#timer").text(time);
+//         time--;
+//         }
+//         else if (time === 0) {
+//             questionCount++;
+//             clearInterval();
+//         }
+//     }, 1000);
+// }
