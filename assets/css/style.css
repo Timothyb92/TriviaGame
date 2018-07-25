@@ -1,6 +1,7 @@
 div {
     /* border: red solid 1px; */
     margin: 25px 0px;
+    background-color: cornsilk;
 }
 
 #startGameContainer {
@@ -12,4 +13,12 @@ div {
 p {
     position: absolute;
     top: 50%
+}
+
+body {
+    background-image: url("../images/comicBackground.jpg")
+}
+
+#triviaContainer {
+    height: 500px;;
 }

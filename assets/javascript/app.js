@@ -74,11 +74,6 @@ $.getJSON("https://opentdb.com/api.php?amount=10&category=29&type=multiple", fun
             correctAnswers++;
             answerIsCorrect = true;
             revealAnswer();
-            //!!!!!!!!! NEED TO PUT THESE ON THE ANSWER RESULT SCREEN WHEN IT'S ADDED !!!!!!!!!
-            // questionCount++;
-            // gameOverCheck();
-            // renderQuestion();
-            //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         }
         //If the button clicked is the incorrect answer, incorrect answer counter is increased, question count is increased, and the next question is rendered
         else if ($(this).attr("value") == "incorrect"){
@@ -87,30 +82,27 @@ $.getJSON("https://opentdb.com/api.php?amount=10&category=29&type=multiple", fun
             incorrectAnswers++;
             answerIsCorrect = false;
             revealAnswer();
-            //!!!!!!!!! NEED TO PUT THESE ON THE ANSWER RESULT SCREEN WHEN IT'S ADDED !!!!!!!!!
-            // questionCount++;
-            // gameOverCheck();
-            // renderQuestion();
-            //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         }
     });
     var revealAnswer = function(){
         stopTimer();
         $("#triviaContainer").hide();
         if (answerIsCorrect){
-            $("#result").text("Correct!")
-            $("#answerImg").text() //IMAGE FOR CORRECT GUESS WILL GO HERE
+            $("#result").html("<h3>Correct!</h3>")
+            $("#answerImg").html("<img src='assets/images/deadpoolThumbsUp.jpg'>") //IMAGE FOR CORRECT GUESS WILL GO HERE
         } else if (!answerIsCorrect){
-            $("#result").text("Nope!")
+            $("#result").html("<h3>Nope!</h3>")
             $("#correctAnswer").text("The correct answer is " + data.results[questionCount].correct_answer);
-            $("#answerImg").text() //IMAGE FOR INCORRECT GUESS WILL GO HERE
+            $("#answerImg").html("<img src='assets/images/deadpoolThumbsDown.gif'>") //IMAGE FOR INCORRECT GUESS WILL GO HERE
         } else {
             $("#result").text("Times up!")
             $("#correctAnswer").text("The correct answer is " + data.results[questionCount].correct_answer);
-            $("#answerImg").text() //IMAGE FOR INCORRECT GUESS WILL GO HERE
+            $("#answerImg").html("<img src='assets/images/deadpoolThumbsDown.gif'>") //IMAGE FOR INCORRECT GUESS WILL GO HERE
         }
         $("#answer").show();
         questionCount++;
+        gameOverCheck();
+        // renderQuestion();
     };
 })
 
