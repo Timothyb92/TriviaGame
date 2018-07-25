@@ -9,6 +9,7 @@ var buttonNum;
 var randomNum = function(){
     buttonNum = Math.floor(Math.random() * 4);
 }
+var answerIsCorrect;
 
 //Function that counts time down to zero
 var countDown = function(){
@@ -71,22 +72,46 @@ $.getJSON("https://opentdb.com/api.php?amount=10&category=29&type=multiple", fun
             console.log("clicked correct button");
             time = 30;
             correctAnswers++;
-            questionCount++;
-            gameOverCheck();
-            renderQuestion();
-            stopTimer();
+            answerIsCorrect = true;
+            revealAnswer();
+            //!!!!!!!!! NEED TO PUT THESE ON THE ANSWER RESULT SCREEN WHEN IT'S ADDED !!!!!!!!!
+            // questionCount++;
+            // gameOverCheck();
+            // renderQuestion();
+            //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         }
         //If the button clicked is the incorrect answer, incorrect answer counter is increased, question count is increased, and the next question is rendered
         else if ($(this).attr("value") == "incorrect"){
             console.log("clicked incorrect button");
             time = 30;
             incorrectAnswers++;
-            questionCount++;
-            gameOverCheck();
-            renderQuestion();
-            stopTimer();
+            answerIsCorrect = false;
+            revealAnswer();
+            //!!!!!!!!! NEED TO PUT THESE ON THE ANSWER RESULT SCREEN WHEN IT'S ADDED !!!!!!!!!
+            // questionCount++;
+            // gameOverCheck();
+            // renderQuestion();
+            //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         }
-    })
+    });
+    var revealAnswer = function(){
+        stopTimer();
+        $("#triviaContainer").hide();
+        if (answerIsCorrect){
+            $("#result").text("Correct!")
+            $("#answerImg").text() //IMAGE FOR CORRECT GUESS WILL GO HERE
+        } else if (!answerIsCorrect){
+            $("#result").text("Nope!")
+            $("#correctAnswer").text("The correct answer is " + data.results[questionCount].correct_answer);
+            $("#answerImg").text() //IMAGE FOR INCORRECT GUESS WILL GO HERE
+        } else {
+            $("#result").text("Times up!")
+            $("#correctAnswer").text("The correct answer is " + data.results[questionCount].correct_answer);
+            $("#answerImg").text() //IMAGE FOR INCORRECT GUESS WILL GO HERE
+        }
+        $("#answer").show();
+        questionCount++;
+    };
 })
 
 //Checks to see if the game is over. If it's over, the final score screen will be shown.
@@ -101,12 +126,11 @@ var gameOverCheck = function(){
     }
 }
 
-
 //Hides the questions and score screen on load
 $(document).ready(function(){
     $("#triviaContainer").hide();
     $("#finalScoreContainer").hide();
-    $("#showAnswer").hide();
+    $("#answer").hide();
     
     $("#playAgain").click(function(){
         console.log("Play again clicked")
