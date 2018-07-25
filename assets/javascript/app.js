@@ -13,16 +13,15 @@ var randomNum = function(){
 //API call
 $.getJSON("https://opentdb.com/api.php?amount=10&category=29&type=multiple", function(data){
     // console.log(data);
-    console.log(data.results);
+    // console.log(data.results);
     // console.log(data.results[0].question)
     // console.log(data.results[0].incorrect_answers[0]);
     
-    $(".question").text(data.results[questionCount].question);
     
-
+    
     //Function that assigns each possible answer to a random button for each question
     var renderQuestion = function(){
-        buttonArr = [];
+        $(".question").text(data.results[questionCount].question);
         data.results[questionCount].incorrect_answers.forEach(function(value, index){
             while (buttonArr.length <= (index + 1)){
                 if (buttonArr.indexOf(buttonNum) === -1){
@@ -31,19 +30,18 @@ $.getJSON("https://opentdb.com/api.php?amount=10&category=29&type=multiple", fun
                     randomNum();
                 }
             }
-            console.log(buttonArr);
             $("#button" + buttonNum).text(value);
             $("#button" + buttonNum).attr("value", "incorrect");
-
+            // console.log(buttonArr);
         });
-
         //Puts the correct answer in the one remaining empty button
         while (buttonArr.indexOf(buttonNum) > 0){
             randomNum();
         };
-        console.log("This number should NOT be in the array logged above: " + buttonNum);
+        // console.log("This number should NOT be in the array logged above: " + buttonNum);
         $("#button" + buttonNum).text(data.results[questionCount].correct_answer);
         $("#button" + buttonNum).attr("value", "correct");
+        buttonArr = [];
     };
 
     //Start button event listener that hides the start button and shows the trivia questions
@@ -56,9 +54,17 @@ $.getJSON("https://opentdb.com/api.php?amount=10&category=29&type=multiple", fun
     $("button").click(function(){
         if ($(this).attr("value") == "correct"){
             console.log("clicked correct button");
+            correctAnswers++;
+            questionCount++;
+            gameOverCheck();
+            renderQuestion();
         }
         else if ($(this).attr("value") == "incorrect"){
             console.log("clicked incorrect button");
+            incorrectAnswers++;
+            questionCount++;
+            gameOverCheck();
+            renderQuestion();
         }
     })
 })
