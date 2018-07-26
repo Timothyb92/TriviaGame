@@ -12,7 +12,7 @@ div {
 
 p {
     position: absolute;
-    top: 50%
+    top: 50%;
 }
 
 body {
@@ -21,4 +21,35 @@ body {
 
 #triviaContainer {
     height: 500px;;
+}
+
+h1 {
+    position: absolute;
+    top: 45%
+}
+
+#timeLeft {
+    color: red;
+    font-weight: bold;
+    font-size: 20pt
+}
+
+.question {
+    font-size: 24pt
+}
+
+.btn {
+    font-size: 20pt
+}
+
+#row2 {
+    margin-top: 70px;
+}
+
+#correctAnswer {
+    font-weight: 22pt;
+}
+
+#answer {
+    font-weight: 20pt;
 }

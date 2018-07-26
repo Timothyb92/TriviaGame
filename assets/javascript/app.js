@@ -3,7 +3,7 @@ var correctAnswers = 0;
 var incorrectAnswers = 0;
 var unanswered = 0;
 var questionCount = 0;
-var time = 10;
+var time = 20;
 var answerIsCorrect;
 var timeout;
 var myTimer;
@@ -17,18 +17,23 @@ var stopTimer;
 $.getJSON("https://opentdb.com/api.php?amount=10&category=29&type=multiple", function(data){
     
     var renderQuestion = function(){
-        time = 10;
+        //Initializes time for each question and immediately displays it on the screen for the user
+        time = 20;
+        $("#timer").text(time);
+
+        //Variables to hold the value of each possible answer (randomly assigned with each question asked)
         var buttonNum;
         var randomNum = function(){
             buttonNum = Math.floor(Math.random() * 4);
         }
+        //Empty array to house randomly assigned buttons for each question
         var buttonArr = [];
         
-        //Function that counts time down to zero
+        //Function that counts time down to zero. Each second it updates the time remaining in the DOM. Once it hits zero, it reveals the answer screen
         var countDown = function(){
             console.log(time);
-            $("#timer").text(time);
             time--;
+            $("#timer").text(time);
             if (time === 0){
                 timeout = true;
                 revealAnswer();
@@ -86,7 +91,6 @@ $.getJSON("https://opentdb.com/api.php?amount=10&category=29&type=multiple", fun
         //If the button is the correct answer, the correct answer count is increased and the answer screen is shown
         if ($(this).attr("value") == "correct"){
             console.log("clicked correct button");
-            // time = 10;
             correctAnswers++;
             answerIsCorrect = true;
             revealAnswer();
@@ -94,7 +98,6 @@ $.getJSON("https://opentdb.com/api.php?amount=10&category=29&type=multiple", fun
         //If the button clicked is the incorrect answer, incorrect answer counter is increased and the answer screen is shown
         else if ($(this).attr("value") == "incorrect"){
             console.log("clicked incorrect button");
-            // time = 10;
             incorrectAnswers++;
             answerIsCorrect = false;
             revealAnswer();
@@ -146,7 +149,7 @@ $.getJSON("https://opentdb.com/api.php?amount=10&category=29&type=multiple", fun
         correctAnswers = 0;
         incorrectAnswers = 0;
         unanswered = 0;
-        time = 10;
+        time = 20;
         $("#triviaContainer").show();
         $("#finalScoreContainer").hide();
         stopTimer();
