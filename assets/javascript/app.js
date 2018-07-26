@@ -55,7 +55,7 @@ $.getJSON("https://opentdb.com/api.php?amount=10&category=29&type=multiple", fun
         }, 1000)
         
         //Puts the question at the current index in the Div displayed to the user
-        $(".question").text(data.results[questionCount].question);
+        $(".question").html(data.results[questionCount].question);
 
         //Function that assigns each possible answer to a random button for each question
         data.results[questionCount].incorrect_answers.forEach(function(value, index){
@@ -66,7 +66,7 @@ $.getJSON("https://opentdb.com/api.php?amount=10&category=29&type=multiple", fun
                     randomNum();
                 }
             }
-            $("#button" + buttonNum).text(value);
+            $("#button" + buttonNum).html(value);
             $("#button" + buttonNum).attr("value", "incorrect");
         });
 
@@ -74,7 +74,7 @@ $.getJSON("https://opentdb.com/api.php?amount=10&category=29&type=multiple", fun
         while (buttonArr.indexOf(buttonNum) > 0){
             randomNum();
         };
-        $("#button" + buttonNum).text(data.results[questionCount].correct_answer);
+        $("#button" + buttonNum).html(data.results[questionCount].correct_answer);
         $("#button" + buttonNum).attr("value", "correct");
         buttonArr = [];
     };
@@ -118,14 +118,14 @@ $.getJSON("https://opentdb.com/api.php?amount=10&category=29&type=multiple", fun
             //If the answer the user click is wrong, it tell them so and shows the correct answer. Deadpool gives them a thumbs down
         } else if (answerIsCorrect === false){
             $("#result").html("<h3>Nope!</h3>");
-            $("#correctAnswer").text("The correct answer is " + data.results[questionCount].correct_answer);
+            $("#correctAnswer").html("The correct answer is " + data.results[questionCount].correct_answer);
             $("#answerImg").html("<img src='assets/images/deadpoolThumbsDown.gif'>");
 
             //If the user doesn't pick an answer in time, Deadpool gives them a thumbs down and show them the correct answer.
         } else if (timeout === true){
             unanswered++;
             $("#result").html("<h3>Times up!</h3>");
-            $("#correctAnswer").text("The correct answer is " + data.results[questionCount].correct_answer);
+            $("#correctAnswer").html("The correct answer is " + data.results[questionCount].correct_answer);
             $("#answerImg").html("<img src='assets/images/deadpoolThumbsDown.gif'>");
         }
         //Shows the answer screen and increased the question count
