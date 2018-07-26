@@ -3,7 +3,7 @@ var correctAnswers = 0;
 var incorrectAnswers = 0;
 var unanswered = 0;
 var questionCount = 0;
-var time = 5;
+var time = 10;
 var answerIsCorrect;
 var timeout;
 var myTimer;
@@ -17,6 +17,7 @@ var stopTimer;
 $.getJSON("https://opentdb.com/api.php?amount=10&category=29&type=multiple", function(data){
     
     var renderQuestion = function(){
+        time = 10;
         var buttonNum;
         var randomNum = function(){
             buttonNum = Math.floor(Math.random() * 4);
@@ -85,7 +86,7 @@ $.getJSON("https://opentdb.com/api.php?amount=10&category=29&type=multiple", fun
         //If the button is the correct answer, the correct answer count is increased and the answer screen is shown
         if ($(this).attr("value") == "correct"){
             console.log("clicked correct button");
-            time = 30;
+            // time = 10;
             correctAnswers++;
             answerIsCorrect = true;
             revealAnswer();
@@ -93,7 +94,7 @@ $.getJSON("https://opentdb.com/api.php?amount=10&category=29&type=multiple", fun
         //If the button clicked is the incorrect answer, incorrect answer counter is increased and the answer screen is shown
         else if ($(this).attr("value") == "incorrect"){
             console.log("clicked incorrect button");
-            time = 30;
+            // time = 10;
             incorrectAnswers++;
             answerIsCorrect = false;
             revealAnswer();
@@ -103,12 +104,12 @@ $.getJSON("https://opentdb.com/api.php?amount=10&category=29&type=multiple", fun
     //Function that tells the user if they got the answer right or wrong
     var revealAnswer = function(){
         stopTimer();
-        //Set time out goes here
         //Hides the trivia questions
         $("#triviaContainer").hide();
         //If the answer the user clicked is correct, it tell them so and Deadpool gives them a thumbs up
         if (answerIsCorrect === true){
             $("#result").html("<h3>Correct!</h3>");
+            $("#correctAnswer").text("");
             $("#answerImg").html("<img src='assets/images/deadpoolThumbsUp.jpg'>");
 
             //If the answer the user click is wrong, it tell them so and shows the correct answer. Deadpool gives them a thumbs down
@@ -119,24 +120,47 @@ $.getJSON("https://opentdb.com/api.php?amount=10&category=29&type=multiple", fun
 
             //If the user doesn't pick an answer in time, Deadpool gives them a thumbs down and show them the correct answer.
         } else if (timeout === true){
+            unanswered++;
             $("#result").html("<h3>Times up!</h3>");
             $("#correctAnswer").text("The correct answer is " + data.results[questionCount].correct_answer);
             $("#answerImg").html("<img src='assets/images/deadpoolThumbsDown.gif'>");
         }
         //Shows the answer screen and increased the question count
         $("#answer").show();
-        questionCount++;
-        gameOverCheck();
-        // setTimeout(renderQuestion(), 5000);
+        answerIsCorrect = null;
+        timeout = null;
+        setTimeout(function(){
+            if (questionCount === 9){
+                gameOverCheck();
+            } else {
+                questionCount++;
+                renderQuestion();
+            }
+        }, 3000);
     };
+
+    //Listens for click on the play again button at the final score screen
+    //If clicked, the game restarts
+    $("#playAgain").click(function(){
+        questionCount = 0;
+        correctAnswers = 0;
+        incorrectAnswers = 0;
+        unanswered = 0;
+        time = 10;
+        $("#triviaContainer").show();
+        $("#finalScoreContainer").hide();
+        stopTimer();
+        renderQuestion();
+    })
 
     //Checks to see if the game is over. If it's over, the final score screen will be shown.
     var gameOverCheck = function(){
-        if (questionCount === 10){
+        if (questionCount === 9){
             $("#correctAnswersDiv").text("Correct answers: " + correctAnswers);
             $("#incorrectAnswersDiv").text("Incorrect answers: " + incorrectAnswers);
             $("#unansweredDiv").text("Unanswered questions: " + unanswered);
             $("#triviaContainer").hide();
+            $("#answer").hide();
             $("#finalScoreContainer").show();
             stopTimer;
         }
@@ -150,16 +174,5 @@ $(document).ready(function(){
     $("#finalScoreContainer").hide();
     $("#answer").hide();
     
-    //Listens for click on the play again button at the final score screen
-    //If clicked, the game restarts
-    $("#playAgain").click(function(){
-        questionCount = 0;
-        correctAnswers = 0;
-        incorrectAnswers = 0;
-        unanswered = 0;
-        time = 30;
-        $("#triviaContainer").show();
-        $("#finalScoreContainer").hide();
-    })
 
 });
